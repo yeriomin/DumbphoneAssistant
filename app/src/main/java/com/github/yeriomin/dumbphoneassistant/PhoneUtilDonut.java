@@ -10,6 +10,9 @@ import android.provider.Contacts.People;
 
 import java.util.ArrayList;
 
+@TargetApi(4)
+@SuppressLint("NewApi")
+@SuppressWarnings("deprecation")
 public class PhoneUtilDonut extends PhoneUtil {
 
     public PhoneUtilDonut(Activity activity) {
