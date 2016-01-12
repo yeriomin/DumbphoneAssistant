@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Dumbphone Assistant</string>
+
+    <string name="phone_tab_title">Phone</string>
+    <string name="sim_tab_title">Sim Card</string>
+
+    <string name="are_you_sure">Delete %1$s?</string>
+    <string name="are_you_sure_all">Delete all contacts from SIM card?</string>
+
+    <string name="confirm_sim_contact_stored">Contact stored on SIM card</string>
+    <string name="confirm_sim_contact_removed">Contact removed from SIM card</string>
+    <string name="confirm_phone_contact_number_stored">Contact %1$s stored on phone</string>
+    
+    <string name="error_sim_contact_already_present">Already present on SIM</string>
+    <string name="error_sim_contact_not_stored">Failed to save contact on SIM</string>
+    <string name="error_sim_error_during_contact_removal">Could not remove contact from SIM</string>
+    <string name="error_phone_contact_already_present">Already present on Phone</string>
+    <string name="error_phone_number_not_stored">Error adding number to contact on Phone!</string>
+    <string name="error_phone_number_error">Unknown error while adding number to contact on Phone!</string>
+
+    <string name="title_move_all_contacts_to_sim">Copy all contacts to SIM card</string>
+    <string name="title_move_all_contacts_to_phone">Copy to phone or delete all contacts</string>
+
+    <string name="progress_title_delete_all_sim_contacts">Deleting all contacts from SIM card</string>
+    <string name="progress_title_copy_all_contacts_to_sim">Copying all contacts to SIM card</string>
+    <string name="progress_title_copy_all_contacts_to_phone">Copying all contacts to phone</string>
+    <string name="progress_message_delete_all_sim_contacts">Deleting %1$s contacts from SIM card</string>
+    <string name="progress_message_copy_all_contacts_to_sim">Copying %1$s contacts from phone to SIM card</string>
+    <string name="progress_message_copy_all_contacts_to_phone">Copying %1$s contacts from SIM card to phone</string>
+
+</resources>

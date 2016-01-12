@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/ImageButtonDim" >
+
+    <ImageButton
+        android:id="@+id/button_edit"
+        android:src="@android:drawable/ic_menu_edit"
+        android:clickable="true"
+        android:layout_width="@dimen/ImageButtonDim"
+        android:layout_height="@dimen/ImageButtonDim" />
+
+    <LinearLayout
+        android:id="@+id/text_container"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_margin="8dp"
+        android:layout_toRightOf="@+id/button_edit"
+        android:layout_toLeftOf="@+id/button_to_sim"
+        android:layout_toEndOf="@+id/button_edit">
+
+        <TextView
+            android:id="@+id/text_contact_name"
+            android:ellipsize="end"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/text_phone"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_contact_name" />
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/button_to_sim"
+        android:src="@drawable/ic_arrow_right"
+        android:clickable="true"
+        android:focusable="false"
+        android:layout_width="@dimen/ImageButtonDim"
+        android:layout_height="@dimen/ImageButtonDim"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

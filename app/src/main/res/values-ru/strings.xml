@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="are_you_sure">Удалить %1$s?</string>
+    <string name="are_you_sure_all">Удалить все контакты с SIM-карты?</string>
+
+    <string name="confirm_phone_contact_number_stored">Контакт %1$s сохранён в телефоне</string>
+    <string name="confirm_sim_contact_removed">Контакт удалён с SIM-карты</string>
+    <string name="confirm_sim_contact_stored">Контакт сохранён на SIM-карту</string>
+    <string name="error_phone_contact_already_present">Уже есть на телефоне</string>
+    <string name="error_phone_number_error">Не удалось сохранить номер телефона в контакт</string>
+    <string name="error_sim_contact_not_stored">Не удалось сохранить на SIM-карту</string>
+    <string name="error_sim_error_during_contact_removal">Не удалось удалить с SIM-карты</string>
+    <string name="sim_tab_title">SIM-карта</string>
+    <string name="phone_tab_title">Телефон</string>
+    <string name="error_sim_contact_already_present">Уже есть на SIM-карте</string>
+    <string name="error_phone_number_not_stored">Не удалось сохранить номер телефона в контакт</string>
+
+    <string name="title_move_all_contacts_to_sim">Копировать всё на SIM-карту</string>
+    <string name="title_move_all_contacts_to_phone">Всё на телефон или удалить всё</string>
+
+    <string name="progress_title_delete_all_sim_contacts">Удаляем все контакты с SIM-карты</string>
+    <string name="progress_title_copy_all_contacts_to_sim">Копируем все контакты на SIM-карту</string>
+    <string name="progress_title_copy_all_contacts_to_phone">Копируем все контакты на телефон</string>
+    <string name="progress_message_delete_all_sim_contacts">Удаляем %1$s контактов с SIM-карты</string>
+    <string name="progress_message_copy_all_contacts_to_sim">Копируем %1$s контактов с телефона на SIM-карту</string>
+    <string name="progress_message_copy_all_contacts_to_phone">Копируем %1$s контактов с SIM-карты на телефон</string>
+</resources>
