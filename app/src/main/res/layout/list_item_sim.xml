@@ -6,6 +6,7 @@
     <ImageButton
         android:id="@+id/button_to_phone"
         android:src="@drawable/ic_arrow_left"
+        android:contentDescription="@string/content_description_button_to_phone"
         android:clickable="true"
         android:layout_width="@dimen/ImageButtonDim"
         android:layout_height="@dimen/ImageButtonDim" />
@@ -17,8 +18,9 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_margin="8dp"
-        android:layout_toRightOf="@+id/button_to_phone"
         android:layout_toLeftOf="@+id/button_delete"
+        android:layout_toRightOf="@+id/button_to_phone"
+        android:layout_toStartOf="@+id/button_delete"
         android:layout_toEndOf="@+id/button_to_phone">
 
         <TextView
@@ -32,14 +34,14 @@
             android:id="@+id/text_phone"
             android:textAppearance="@android:style/TextAppearance.Medium"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/text_contact_name" />
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
     <ImageButton
         android:id="@+id/button_delete"
         android:src="@android:drawable/ic_menu_delete"
+        android:contentDescription="@string/content_description_button_delete"
         android:clickable="true"
         android:focusable="false"
         android:layout_width="@dimen/ImageButtonDim"

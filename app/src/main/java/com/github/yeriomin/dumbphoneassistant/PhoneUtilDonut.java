@@ -1,7 +1,5 @@
 package com.github.yeriomin.dumbphoneassistant;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -18,8 +16,6 @@ public class PhoneUtilDonut extends PhoneUtil {
         super(activity);
     }
 
-    @TargetApi(4)
-    @SuppressLint("NewApi")
     public ArrayList<Contact> get() {
         final String[] phoneProjection = new String[]{
                 People.NAME,
@@ -51,8 +47,6 @@ public class PhoneUtilDonut extends PhoneUtil {
         return phoneContacts;
     }
 
-    @TargetApi(4)
-    @SuppressLint("NewApi")
     public boolean create(Contact newPhoneContact) throws Exception {
         // first, we have to create the contact
         ContentValues newPhoneValues = new ContentValues();
@@ -81,8 +75,6 @@ public class PhoneUtilDonut extends PhoneUtil {
     }
 
 
-    @TargetApi(4)
-    @SuppressLint("NewApi")
     public Uri retrieveContactUri(Contact contact) {
         String id = contact.getId();
         String[] projection = new String[] { Contacts.Phones.PERSON_ID };

@@ -29,4 +29,9 @@
     <string name="progress_message_copy_all_contacts_to_sim">Copying %1$s contacts from phone to SIM card</string>
     <string name="progress_message_copy_all_contacts_to_phone">Copying %1$s contacts from SIM card to phone</string>
 
+    <string name="content_description_button_edit">Edit contact on phone</string>
+    <string name="content_description_button_delete">Delete contact from SIM</string>
+    <string name="content_description_button_to_phone">Copy contact to phone</string>
+    <string name="content_description_button_to_sim">Copy contact to SIM</string>
+
 </resources>

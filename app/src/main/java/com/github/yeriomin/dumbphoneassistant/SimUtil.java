@@ -106,19 +106,19 @@ public class SimUtil extends Util {
                 android.provider.Contacts.PeopleColumns.NAME
         );
 
-        final ArrayList<Contact> simContacts;
-        if (results != null && results.getCount() > 0) {
-            simContacts  = new ArrayList<Contact>(results.getCount());
-            while (results.moveToNext()) {
-                final Contact simContact = new Contact(
-                        results.getString(results.getColumnIndex("_id")),
-                        results.getString(results.getColumnIndex("name")),
-                        results.getString(results.getColumnIndex("number"))
-                );
-                simContacts.add(simContact);
+        final ArrayList<Contact> simContacts = new ArrayList<Contact>();
+        if (results != null) {
+            if (results.getCount() > 0) {
+                while (results.moveToNext()) {
+                    final Contact simContact = new Contact(
+                            results.getString(results.getColumnIndex(android.provider.BaseColumns._ID)),
+                            results.getString(results.getColumnIndex(android.provider.Contacts.PeopleColumns.NAME)),
+                            results.getString(results.getColumnIndex(android.provider.Contacts.PhonesColumns.NUMBER))
+                    );
+                    simContacts.add(simContact);
+                }
             }
-        } else {
-            simContacts = new ArrayList<Contact>(0);
+            results.close();
         }
         return simContacts;
     }
@@ -151,8 +151,9 @@ public class SimUtil extends Util {
      * @return Success or not
      */
     public boolean delete(Contact contact) {
-        String where = "tag='" + contact.getName() + "' AND number='" + contact.getNumber() + "'";
-        return resolver.delete(simUri, where, null) > 0;
+        String where = "tag='?' AND number='?'";
+        String[] selectionArgs = new String[] {contact.getName(), contact.getNumber()};
+        return resolver.delete(simUri, where, selectionArgs) > 0;
     }
 
     /**

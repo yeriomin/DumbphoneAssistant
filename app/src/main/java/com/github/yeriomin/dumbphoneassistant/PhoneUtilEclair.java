@@ -1,5 +1,6 @@
 package com.github.yeriomin.dumbphoneassistant;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
@@ -10,9 +11,7 @@ import android.provider.ContactsContract.PhoneLookup;
 
 import java.util.ArrayList;
 
-/**
- * @TargetApi(5)
- */
+@TargetApi(5)
 public class PhoneUtilEclair extends PhoneUtil {
 
     public PhoneUtilEclair(Activity activity) {
@@ -93,11 +92,13 @@ public class PhoneUtilEclair extends PhoneUtil {
         Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
         String[] projection = new String[] { ContactsContract.Contacts.LOOKUP_KEY, ContactsContract.RawContacts.CONTACT_ID };
         String selection;
+        String[] selectionArgs;
 
         // at first try to resolve with contacts id
         if (contact.getId() != null) {
             selection = PhoneLookup._ID + "=?";
-            result = resolver.query(uri, projection, selection, new String[] { contact.getId() }, null);
+            selectionArgs = new String[] { contact.getId() };
+            result = resolver.query(uri, projection, selection, selectionArgs, null);
             // check if unique result
             if (result.getCount() != 1) {
                 result.close();
@@ -107,10 +108,11 @@ public class PhoneUtilEclair extends PhoneUtil {
         
         // if no contact id or no result, try alternate method
         if (result == null) {
-            selection = ContactsContract.Contacts.DISPLAY_NAME + " = '" + contact.getName()
-                    + "' AND " + ContactsContract.CommonDataKinds.Phone.NUMBER + " = '" + contact.getNumber() + "'"
+            selection = ContactsContract.Contacts.DISPLAY_NAME + " = '?' AND "
+                    + ContactsContract.CommonDataKinds.Phone.NUMBER + " = '?'"
             ;
-            result = resolver.query(uri, projection, selection, null, null);
+            selectionArgs = new String[] { contact.getName(), contact.getNumber() };
+            result = resolver.query(uri, projection, selection, selectionArgs, null);
             // check if unique result
             if (result.getCount() != 1) {
                 result.close();

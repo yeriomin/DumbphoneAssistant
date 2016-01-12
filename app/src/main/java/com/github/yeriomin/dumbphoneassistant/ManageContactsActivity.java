@@ -1,6 +1,7 @@
 package com.github.yeriomin.dumbphoneassistant;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.TabActivity;
@@ -36,22 +37,20 @@ public class ManageContactsActivity extends TabActivity {
     private SimUtil simUtil;
     private PhoneUtil phoneUtil;
     private ProgressDialog progressDialog;
+    private PermissionManager permissionManager;
 
     private final int EDIT_REQUEST_CODE = 42; // Any number
-
-    final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 125;
-    final private String[] permissionsRequired = new String[] {
-            Manifest.permission.READ_PHONE_STATE,
-            Manifest.permission.WRITE_CONTACTS,
-            Manifest.permission.READ_CONTACTS
-    };
-    private ArrayList<String> permissionsGranted = new ArrayList<String>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (permissionsGranted()) {
+        boolean permissionsGranted = true;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            permissionManager = new PermissionManager(this);
+            permissionsGranted = permissionManager.permissionsGranted();
+        }
+        if (permissionsGranted) {
             initListViews();
         }
     }
@@ -481,47 +480,10 @@ public class ManageContactsActivity extends TabActivity {
         }
     }
 
-    private boolean permissionsGranted() {
-        boolean granted = true;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ArrayList<String> permissionsNotGranted = new ArrayList<String>();
-            for (int i = 0; i < this.permissionsRequired.length; i++) {
-                if (checkSelfPermission(this.permissionsRequired[i]) != PackageManager.PERMISSION_GRANTED) {
-                    permissionsNotGranted.add(this.permissionsRequired[i]);
-                } else {
-                    this.permissionsGranted.add(this.permissionsRequired[i]);
-                }
-            }
-            if (permissionsNotGranted.size() > 0) {
-                granted = false;
-                String[] notGrantedArray = permissionsNotGranted.toArray(new String[permissionsNotGranted.size()]);
-                requestPermissions(notGrantedArray, REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
-            }
-        }
-        return granted;
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS:
-            {
-                List<String> requiredPermissions = Arrays.asList(this.permissionsRequired);
-                String permission;
-                for (int i = 0; i < permissions.length; i++) {
-                    permission = permissions[i];
-                    if (requiredPermissions.contains(permission)
-                            && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        this.permissionsGranted.add(permission);
-                    }
-                }
-                if (this.permissionsGranted.size() == this.permissionsRequired.length) {
-                    initListViews();
-                }
-            }
-            break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (permissionManager.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+            initListViews();
         }
     }
 }
