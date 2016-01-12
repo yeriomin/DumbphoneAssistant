@@ -1,5 +1,6 @@
 package com.github.yeriomin.dumbphoneassistant;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -11,8 +12,6 @@ import android.provider.Contacts.People;
 import java.util.ArrayList;
 
 @TargetApi(4)
-@SuppressLint("NewApi")
-@SuppressWarnings("deprecation")
 public class PhoneUtilDonut extends PhoneUtil {
 
     public PhoneUtilDonut(Activity activity) {
