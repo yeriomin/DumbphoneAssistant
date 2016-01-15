@@ -151,9 +151,8 @@ public class SimUtil extends Util {
      * @return Success or not
      */
     public boolean delete(Contact contact) {
-        String where = "tag='?' AND number='?'";
-        String[] selectionArgs = new String[] {contact.getName(), contact.getNumber()};
-        return resolver.delete(simUri, where, selectionArgs) > 0;
+        String where = "tag='" + contact.getName() + "' AND number='" + contact.getNumber() + "'";
+        return resolver.delete(simUri, where, null) > 0;
     }
 
     /**
