@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dumbphone Assistant</string>
+    <string name="are_you_sure">%1$s löschen?</string>
+    <string name="are_you_sure_all">Alle Kontakte von der SIM Karte löschen?</string>
+    <string name="confirm_phone_contact_number_stored">Kontakt %1$s im Telefon gespeichert</string>
+    <string name="confirm_sim_contact_removed">Kontakt von der SIM Karte gelöscht</string>
+    <string name="confirm_sim_contact_stored">Kontakt auf der SIM Karte gespeichert</string>
+    <string name="content_description_button_delete">Kontakt von SIM Karte löschen</string>
+    <string name="content_description_button_edit">Kontakt auf dem Telefon bearbeiten</string>
+    <string name="content_description_button_to_phone">Kopiere Kontakt zum Telefon</string>
+    <string name="content_description_button_to_sim">Kopiere Kontakt zur SIM Karte</string>
+    <string name="error_phone_contact_already_present">Auf dem Telefon bereits vorhanden</string>
+    <string name="error_phone_number_error">Unbekannter Fehler beim Hinzufügen einer Nummer zu einem Kontakt auf dem Telefon!</string>
+    <string name="error_phone_number_not_stored">Fehler beim Hinzufügen einer Nummer zu einem Kontakt auf dem Telefon!</string>
+    <string name="error_sim_contact_already_present">Auf der SIM Karte bereits vorhanden</string>
+    <string name="error_sim_contact_not_stored">Fehler beim Speichern des Kontaktes auf der SIM Karte</string>
+    <string name="error_sim_error_during_contact_removal">Kontakt konnte nicht von der SIM Karte gelöscht werden</string>
+    <string name="phone_tab_title">Telefon</string>
+    <string name="progress_message_copy_all_contacts_to_phone">Kopiere %1$s Kontakte von der SIM Karte auf das Telefon</string>
+    <string name="progress_message_copy_all_contacts_to_sim">Kopiere %1$s Kontakte vom Telefon auf die SIM-Karte</string>
+    <string name="progress_message_delete_all_sim_contacts">Lösche %1$s Kontakte von der SIM Karte</string>
+    <string name="progress_title_copy_all_contacts_to_phone">Kopiere alle Kontakte zum Telefon</string>
+    <string name="progress_title_copy_all_contacts_to_sim">Kopiere alle Kontakte zur SIM Karte</string>
+    <string name="progress_title_delete_all_sim_contacts">Lösche alle Kontakte von der SIM Karte</string>
+    <string name="sim_tab_title">SIM Karte</string>
+    <string name="title_move_all_contacts_to_phone">Kopiere zum Telefon oder lösche alle Kontakte</string>
+    <string name="title_move_all_contacts_to_sim">Kopiere alle Kontakte zur SIM Karte</string>
+</resources>
