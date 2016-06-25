@@ -38,6 +38,8 @@
 
     <string name="pref_transliterate">Transliterate names</string>
     <string name="pref_transliterate_summary">Useful in case an old phone displays blank or unreadable contact names</string>
+    <string name="pref_add_type_suffix">Phone type suffix</string>
+    <string name="pref_add_type_suffix_summary">Phone type suffix (work, home...) is going to be added to contact name when copying to SIM card</string>
     <string name="menu_settings">Settings</string>
 
 </resources>

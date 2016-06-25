@@ -36,6 +36,8 @@
 
     <string name="pref_transliterate">Транслитерировать имена</string>
     <string name="pref_transliterate_summary">Включите, если старый телефон показывает пустые или нечитаемые имена</string>
+    <string name="pref_add_type_suffix">Тип телефона в имени</string>
+    <string name="pref_add_type_suffix_summary">Тип телефона (рабочий, домашний...) будет добавлен к имени контакта при копировании на SIM-карту</string>
     <string name="menu_settings">Настройки</string>
 
 </resources>

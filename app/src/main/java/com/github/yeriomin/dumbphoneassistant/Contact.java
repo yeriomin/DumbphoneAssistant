@@ -5,6 +5,7 @@ public class Contact {
     private String id = null;
     private String name;
     private String number;
+    private String label;
 
     public String getId() {
         return id;
@@ -18,6 +19,10 @@ public class Contact {
         return number;
     }
 
+    public String getLabel() {
+        return label;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -26,6 +31,11 @@ public class Contact {
         this.id = id;
         this.name = name;
         this.number = number;
+    }
+
+    protected Contact(String id, String name, String number, String label) {
+        this(id, name, number);
+        this.label = label;
     }
 
     /**

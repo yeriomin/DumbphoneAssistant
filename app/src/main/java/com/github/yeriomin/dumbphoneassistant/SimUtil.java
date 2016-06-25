@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.provider.Contacts;
 import android.telephony.TelephonyManager;
 
 import java.util.ArrayList;
@@ -98,8 +99,8 @@ public class SimUtil extends Util {
      */
     public ArrayList<Contact> get() {
         final String[] simProjection = new String[] {
-                android.provider.Contacts.PeopleColumns.NAME,
-                android.provider.Contacts.PhonesColumns.NUMBER,
+                Contacts.PeopleColumns.NAME,
+                Contacts.PhonesColumns.NUMBER,
                 android.provider.BaseColumns._ID
         };
         Cursor results = resolver.query(
@@ -116,8 +117,8 @@ public class SimUtil extends Util {
                 while (results.moveToNext()) {
                     final Contact simContact = new Contact(
                             results.getString(results.getColumnIndex(android.provider.BaseColumns._ID)),
-                            results.getString(results.getColumnIndex(android.provider.Contacts.PeopleColumns.NAME)),
-                            results.getString(results.getColumnIndex(android.provider.Contacts.PhonesColumns.NUMBER))
+                            results.getString(results.getColumnIndex(Contacts.PeopleColumns.NAME)),
+                            results.getString(results.getColumnIndex(Contacts.PhonesColumns.NUMBER))
                     );
                     simContacts.add(simContact);
                 }
@@ -169,13 +170,24 @@ public class SimUtil extends Util {
      */
     public Contact convertToSimContact(Contact contact) {
         String name = contact.getName();
-        if (this.settings.getBoolean(DumbphoneAssistantPreferenceActivity.PREFERENCE_TRANSLITERATE, false)) {
+        boolean transliterate = this.settings.getBoolean(DumbphoneAssistantPreferenceActivity.PREFERENCE_TRANSLITERATE, false);
+        boolean addTypeSuffix = this.settings.getBoolean(DumbphoneAssistantPreferenceActivity.PREFERENCE_ADD_TYPE_SUFFIX, false);
+        if (transliterate) {
             name = unidecode(name);
         }
-        name = maxContactNameLength > 0
-                ? name.substring(0, Math.min(name.length(), maxContactNameLength))
+        int adjustedContactNameLength = addTypeSuffix ? maxContactNameLength - 2 : maxContactNameLength;
+        name = adjustedContactNameLength > 0
+                ? name.substring(0, Math.min(name.length(), adjustedContactNameLength))
                 : name
                 ;
+        if (addTypeSuffix) {
+            String label = contact.getLabel();
+            if (transliterate) {
+                label = unidecode(label);
+            }
+            String firstLetter = label.substring(0, 1);
+            name = name + "," + firstLetter;
+        }
         String number = contact.getNumber().replace("-", "");
         return new Contact(null, name, number);
     }

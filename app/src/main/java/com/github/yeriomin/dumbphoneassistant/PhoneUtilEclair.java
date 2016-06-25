@@ -7,6 +7,7 @@ import android.content.ContentProviderResult;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.PhoneLookup;
 
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ public class PhoneUtilEclair extends PhoneUtil {
         String[] projection = new String[] {
                 PhoneLookup._ID,
                 PhoneLookup.DISPLAY_NAME,
+                ContactsContract.CommonDataKinds.Phone.TYPE,
+                ContactsContract.CommonDataKinds.Phone.LABEL,
                 ContactsContract.CommonDataKinds.Phone.NUMBER
         };
         String selection = null;
@@ -38,12 +41,20 @@ public class PhoneUtilEclair extends PhoneUtil {
         );
 
         // create array of Phone contacts and fill it
-        final ArrayList<Contact> phoneContacts = new ArrayList<Contact>(results.getCount());
+        final ArrayList<Contact> phoneContacts = new ArrayList<>(results.getCount());
+        int indexId = results.getColumnIndex(PhoneLookup._ID);
+        int indexName = results.getColumnIndex(PhoneLookup.DISPLAY_NAME);
+        int indexType = results.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE);
+        int indexLabel = results.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LABEL);
+        int indexNumber = results.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
         while (results.moveToNext()) {
+            int type = results.getInt(indexType);
+            String custom = results.getString(indexLabel);
             final Contact phoneContact = new Contact(
-                    results.getString(results.getColumnIndex(PhoneLookup._ID)),
-                    results.getString(results.getColumnIndex(PhoneLookup.DISPLAY_NAME)),
-                    results.getString(results.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                    results.getString(indexId),
+                    results.getString(indexName),
+                    results.getString(indexNumber),
+                    (String) Phone.getTypeLabel(this.activity.getResources(), type, custom)
             );
             phoneContacts.add(phoneContact);
         }
@@ -52,7 +63,7 @@ public class PhoneUtilEclair extends PhoneUtil {
     }
 
     public boolean create(Contact newPhoneContact) throws Exception {
-        ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+        ArrayList<ContentProviderOperation> ops = new ArrayList<>();
         ops.add(ContentProviderOperation
                 .newInsert(ContactsContract.Data.CONTENT_URI)
                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
