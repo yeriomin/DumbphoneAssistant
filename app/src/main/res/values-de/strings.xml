@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Dumbphone Assistant</string>
     <string name="are_you_sure">%1$s löschen?</string>
     <string name="are_you_sure_all">Alle Kontakte von der SIM Karte löschen?</string>
     <string name="confirm_phone_contact_number_stored">Kontakt %1$s im Telefon gespeichert</string>
@@ -26,4 +25,11 @@
     <string name="sim_tab_title">SIM Karte</string>
     <string name="title_move_all_contacts_to_phone">Kopiere zum Telefon oder lösche alle Kontakte</string>
     <string name="title_move_all_contacts_to_sim">Kopiere alle Kontakte zur SIM Karte</string>
+    <string name="menu_settings">Optionen</string>
+    <string name="error_bulk_copy">Konnte nicht kopieren %1$s Kontakte</string>
+    <string name="error_sim_full">Die SIM Karte voll ist?</string>
+    <string name="pref_add_type_suffix">Telefon Typsuffix</string>
+    <string name="pref_transliterate">Transkribieren Namen</string>
+    <string name="pref_add_type_suffix_summary">Phone type suffix (work, home...) is going to be added to contact name when copying to SIM card</string>
+    <string name="pref_transliterate_summary">Useful in case an old phone displays blank or unreadable contact names</string>
 </resources>
