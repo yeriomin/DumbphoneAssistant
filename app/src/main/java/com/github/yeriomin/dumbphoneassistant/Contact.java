@@ -1,7 +1,5 @@
 package com.github.yeriomin.dumbphoneassistant;
 
-import java.io.UnsupportedEncodingException;
-
 public class Contact {
 
     private String id = null;

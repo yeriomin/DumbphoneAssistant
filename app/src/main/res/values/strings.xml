@@ -18,6 +18,8 @@
     <string name="error_phone_contact_already_present">Already present on Phone</string>
     <string name="error_phone_number_not_stored">Error adding number to contact on Phone!</string>
     <string name="error_phone_number_error">Unknown error while adding number to contact on Phone!</string>
+    <string name="error_bulk_copy">Could not copy %1$s contacts.</string>
+    <string name="error_sim_full">Maybe the sim card is full?</string>
 
     <string name="title_move_all_contacts_to_sim">Copy all contacts to SIM card</string>
     <string name="title_move_all_contacts_to_phone">Copy to phone or delete all contacts</string>
@@ -33,5 +35,9 @@
     <string name="content_description_button_delete">Delete contact from SIM</string>
     <string name="content_description_button_to_phone">Copy contact to phone</string>
     <string name="content_description_button_to_sim">Copy contact to SIM</string>
+
+    <string name="pref_transliterate">Transliterate names</string>
+    <string name="pref_transliterate_summary">Useful in case an old phone displays blank or unreadable contact names</string>
+    <string name="menu_settings">Settings</string>
 
 </resources>

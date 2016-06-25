@@ -7,24 +7,28 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 
 import java.util.ArrayList;
+
+import static gcardone.junidecode.Junidecode.unidecode;
 
 public class SimUtil extends Util {
 
     private final SharedPreferences settings;
     private final TelephonyManager telephony;
     private Uri simUri;
-
-    private int maxContactNameLength = 0; // Maximum length of contact names may
-                                          // differ from SIM to SIM, will be
-                                          // detected upon load of class
+    /**
+     * Maximum length of contact names may differ from SIM to SIM, will be detected upon load of class
+     *
+     */
+    private int maxContactNameLength = 0;
 
     public SimUtil(Activity activity) {
         super(activity);
 
-        this.settings = activity.getSharedPreferences(activity.getApplicationInfo().name, 0);
+        this.settings = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         this.telephony = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
         this.simUri = Uri.parse(detectSimUri());
 
@@ -58,7 +62,7 @@ public class SimUtil extends Util {
             maxContactLength = detectMaxContactNameLength();
         }
         if (maxContactLength > 0) {
-            this.settings.edit().putInt(simId, maxContactLength);
+            this.settings.edit().putInt(simId, maxContactLength).commit();
         }
         return maxContactLength;
     }
@@ -106,7 +110,7 @@ public class SimUtil extends Util {
                 android.provider.Contacts.PeopleColumns.NAME
         );
 
-        final ArrayList<Contact> simContacts = new ArrayList<Contact>();
+        final ArrayList<Contact> simContacts = new ArrayList<>();
         if (results != null) {
             if (results.getCount() > 0) {
                 while (results.moveToNext()) {
@@ -158,16 +162,19 @@ public class SimUtil extends Util {
     /**
      * Converts a contact to a SIM card conforming contact by stripping the name
      * to the maximum allowed length and setting ID to null.
-     * 
-     * @param contact
-     *            The contact to convert to SIM conforming values
+     *
+     * @param contact The contact to convert to SIM conforming values
      * @return a contact which does not contain values which exceed the SIM
      *         cards limits or null if there was a problem detecting the limits
      */
     public Contact convertToSimContact(Contact contact) {
-        String name = maxContactNameLength > 0
-                ? contact.getName().substring(0, Math.min(contact.getName().length(), maxContactNameLength))
-                : contact.getName()
+        String name = contact.getName();
+        if (this.settings.getBoolean(DumbphoneAssistantPreferenceActivity.PREFERENCE_TRANSLITERATE, false)) {
+            name = unidecode(name);
+        }
+        name = maxContactNameLength > 0
+                ? name.substring(0, Math.min(name.length(), maxContactNameLength))
+                : name
                 ;
         String number = contact.getNumber().replace("-", "");
         return new Contact(null, name, number);

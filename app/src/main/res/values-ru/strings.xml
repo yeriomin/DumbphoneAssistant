@@ -16,6 +16,8 @@
     <string name="error_phone_contact_already_present">Уже есть на телефоне</string>
     <string name="error_phone_number_not_stored">Не удалось сохранить номер телефона в контакт</string>
     <string name="error_phone_number_error">Не удалось сохранить номер телефона в контакт</string>
+    <string name="error_bulk_copy">Не удалось скопировать %1$s контактов.</string>
+    <string name="error_sim_full">Возможно, SIM-карта заполнена?</string>
 
     <string name="title_move_all_contacts_to_sim">Копировать всё на SIM-карту</string>
     <string name="title_move_all_contacts_to_phone">Всё на телефон или удалить всё</string>
@@ -31,4 +33,9 @@
     <string name="content_description_button_delete">Удалить контакт с SIM-карты</string>
     <string name="content_description_button_to_phone">Копировать контакт на телефон</string>
     <string name="content_description_button_to_sim">Копировать контакт на SIM-карту</string>
+
+    <string name="pref_transliterate">Транслитерировать имена</string>
+    <string name="pref_transliterate_summary">Включите, если старый телефон показывает пустые или нечитаемые имена</string>
+    <string name="menu_settings">Настройки</string>
+
 </resources>

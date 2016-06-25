@@ -1,18 +1,17 @@
 package com.github.yeriomin.dumbphoneassistant;
 
-import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -23,8 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 public class ManageContactsActivity extends TabActivity {
@@ -40,6 +37,22 @@ public class ManageContactsActivity extends TabActivity {
     private PermissionManager permissionManager;
 
     private final int EDIT_REQUEST_CODE = 42; // Any number
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_settings:
+                startActivityForResult(new Intent(this, DumbphoneAssistantPreferenceActivity.class), 1);
+                break;
+        }
+        return true;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -189,7 +202,7 @@ public class ManageContactsActivity extends TabActivity {
         startActivityForResult(editContact, EDIT_REQUEST_CODE);
     }
 
-    private boolean deleteFromSim(Contact contact) throws Exception {
+    private boolean deleteFromSim(Contact contact) {
         boolean result = simUtil.delete(contact);
         if (result) {
             simContacts.remove(contact);
@@ -221,7 +234,7 @@ public class ManageContactsActivity extends TabActivity {
 
     private boolean copyToPhone(Contact contact) throws Exception {
 
-        boolean result = false;
+        boolean result;
         Contact newPhoneContact = new Contact("", contact.getName(), contact.getNumber());
 
         // check, if already present on phone
@@ -358,7 +371,7 @@ public class ManageContactsActivity extends TabActivity {
                     } catch (Exception e) {
                         message = e.getMessage();
                     }
-                    Toast.makeText(ManageContactsActivity.this,message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ManageContactsActivity.this, message, Toast.LENGTH_SHORT).show();
                 }
             };
             buttonToPhone.setOnClickListener(lToPhone);
@@ -431,17 +444,12 @@ public class ManageContactsActivity extends TabActivity {
                     progressDialog.show();
                 }
             });
-            List<Contact> cloneList;
-            Iterator<Contact> i;
-            if (this.mode == COPY_ALL_TO_SIM) {
-                cloneList = new ArrayList<Contact>(phoneContacts);
-            } else {
-                cloneList = new ArrayList<Contact>(simContacts);
-            }
-            i = cloneList.iterator();
-            Contact contact;
-            while (i.hasNext()) {
-                contact = i.next();
+            List<Contact> cloneList = new ArrayList<>(this.mode == COPY_ALL_TO_SIM
+                    ? phoneContacts
+                    : simContacts
+            );
+            int failuresCounter = 0;
+            for (Contact contact: cloneList) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -463,9 +471,10 @@ public class ManageContactsActivity extends TabActivity {
                             throw new RuntimeException("Unknown mode supplied to BulkContactsWorker");
                     }
                 } catch (Exception e) {
-                    // TODO: decide what to do with failed contacts
+                    failuresCounter++;
                 }
             }
+            final int failures = failuresCounter;
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -474,6 +483,13 @@ public class ManageContactsActivity extends TabActivity {
                         refreshPhoneListView();
                     } else {
                         refreshSimListView();
+                    }
+                    if (failures > 0) {
+                        String message = getString(R.string.error_bulk_copy, failures);
+                        if (mode == COPY_ALL_TO_SIM) {
+                            message = message + " " + getString(R.string.error_sim_full);
+                        }
+                        Toast.makeText(ManageContactsActivity.this, message, Toast.LENGTH_SHORT).show();
                     }
                 }
             });

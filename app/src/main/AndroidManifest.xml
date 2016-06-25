@@ -9,6 +9,7 @@
         android:theme="@style/CustomTheme"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name" >
+        <activity android:name="com.github.yeriomin.dumbphoneassistant.DumbphoneAssistantPreferenceActivity" />
         <activity android:name="com.github.yeriomin.dumbphoneassistant.ManageContactsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
