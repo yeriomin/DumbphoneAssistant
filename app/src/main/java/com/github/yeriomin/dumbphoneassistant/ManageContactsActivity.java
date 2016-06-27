@@ -210,7 +210,7 @@ public class ManageContactsActivity extends TabActivity {
         return result;
     }
 
-    private boolean copyToSim(Contact contact) throws Exception {
+    private void copyToSim(Contact contact) throws Exception {
 
         // convert to Contact suitable for storage on SIM
         Contact newSimContact = simUtil.convertToSimContact(contact);
@@ -221,20 +221,17 @@ public class ManageContactsActivity extends TabActivity {
         }
 
         // create contact on SIM card
-        boolean result = simUtil.create(newSimContact);
-
-        // output feedback
-        if (!result) {
+        try {
+            simUtil.create(newSimContact);
+        } catch (Exception e) {
             throw new Exception(getString(R.string.error_sim_contact_not_stored));
         }
 
         simContacts.add(0, newSimContact);
-        return result;
     }
 
-    private boolean copyToPhone(Contact contact) throws Exception {
+    private void copyToPhone(Contact contact) throws Exception {
 
-        boolean result;
         Contact newPhoneContact = new Contact("", contact.getName(), contact.getNumber());
 
         // check, if already present on phone
@@ -244,14 +241,12 @@ public class ManageContactsActivity extends TabActivity {
 
         // create contact on phone
         try {
-            result = simUtil.create(contact);
+            phoneUtil.create(contact);
             phoneContacts.add(0, contact);
         } catch (Exception e) {
             // This is an exception from some util class, so it is a string id
             throw new Exception(getString(Integer.parseInt(e.getMessage())));
         }
-
-        return result;
     }
 
     private void initProgressDialog(int stringIdTitle, int stringIdMessage, int max) {

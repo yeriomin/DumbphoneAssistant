@@ -27,6 +27,10 @@ public class Contact {
         this.id = id;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     protected Contact(String id, String name, String number) {
         this.id = id;
         this.name = name;
@@ -54,19 +58,16 @@ public class Contact {
     @Override
     public boolean equals(Object o) {
         // if not Contact, can't be true
-        if(!(o instanceof Contact)) 
+        if(!(o instanceof Contact)) {
             return false;
+        }
         Contact c = (Contact)o;
         
         // only if id's present, compare them
-        if((id != null) && (id.length()) > 0 && (c.id.length() > 0))
+        if((id != null) && (id.length()) > 0 && (c.id.length() > 0)) {
             return c.id.compareTo(id) == 0;
-        
-        // if SimNames not equal...
-        if(!compareStrings(name, c.name)) {
-            return false;
         }
-
+        
         // finally if numbers not equal...
         return compareStrings(number, c.number);
     }

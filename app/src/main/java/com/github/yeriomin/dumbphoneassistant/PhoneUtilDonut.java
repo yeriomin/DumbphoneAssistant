@@ -32,7 +32,7 @@ public class PhoneUtilDonut extends PhoneUtil {
         );
 
         // create array of Phone contacts and fill it
-        final ArrayList<Contact> phoneContacts = new ArrayList<Contact>();
+        final ArrayList<Contact> phoneContacts = new ArrayList<>();
         if (null != results) {
             while (results.moveToNext()) {
                 final Contact phoneContact = new Contact(
@@ -47,7 +47,7 @@ public class PhoneUtilDonut extends PhoneUtil {
         return phoneContacts;
     }
 
-    public boolean create(Contact newPhoneContact) throws Exception {
+    public void create(Contact newPhoneContact) throws Exception {
         // first, we have to create the contact
         ContentValues newPhoneValues = new ContentValues();
         newPhoneValues.put(Contacts.People.NAME, newPhoneContact.getName());
@@ -70,8 +70,6 @@ public class PhoneUtilDonut extends PhoneUtil {
             // some unknown error has happened
             throw new Exception(String.valueOf(R.string.error_phone_number_error));
         }
-
-        return true;
     }
 
 

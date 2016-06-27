@@ -83,7 +83,12 @@ public class SimUtil extends Util {
         // loop from longest to shortest contact name length until a contact is stored successfully
         for (currentMax = nameString.length(); (!success && currentMax > 0); currentMax--) {
             testContact = new Contact(null, nameString.substring(0, currentMax), "24448888888");
-            success = create(testContact);
+            try {
+                create(testContact);
+                success = true;
+            } catch (Exception e) {
+                // next try
+            }
         }
 
         // if stored successfully, remove contact
@@ -134,9 +139,8 @@ public class SimUtil extends Util {
      * @param newSimContact
      *            The Contact object containing the name and number of the
      *            contact
-     * @return Success or failure. ContentResolver doesn't dive any other info
      */
-    public boolean create(Contact newSimContact) {
+    public void create(Contact newSimContact) throws Exception {
         ContentValues newSimValues = new ContentValues();
         newSimValues.put("tag", newSimContact.getName());
         newSimValues.put("number", newSimContact.getNumber());
@@ -144,7 +148,9 @@ public class SimUtil extends Util {
 
         // It is always "content://icc/adn/0" on success and null on failure
         // TODO: Isn't there a better API for working with SIM?
-        return newSimRow != null;
+        if (newSimRow == null) {
+            throw new Exception("null Uri returned");
+        }
     }
 
     /**

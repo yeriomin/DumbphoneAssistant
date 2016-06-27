@@ -41,7 +41,7 @@ public class PhoneUtilEclair extends PhoneUtil {
         );
 
         // create array of Phone contacts and fill it
-        final ArrayList<Contact> phoneContacts = new ArrayList<>(results.getCount());
+        final ArrayList<Contact> phoneContacts = new ArrayList<>();
         int indexId = results.getColumnIndex(PhoneLookup._ID);
         int indexName = results.getColumnIndex(PhoneLookup.DISPLAY_NAME);
         int indexType = results.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE);
@@ -62,38 +62,52 @@ public class PhoneUtilEclair extends PhoneUtil {
         return phoneContacts;
     }
 
-    public boolean create(Contact newPhoneContact) throws Exception {
+    public void create(Contact contact) throws Exception {
+        String name = contact.getName();
+        // Prevents previously placed phone type suffixes from being interpreted as part of the name
+        if (name.charAt(name.length() - 2) == ',') {
+            name = name.substring(0, name.length() - 2);
+            contact.setName(name);
+        }
+
         ArrayList<ContentProviderOperation> ops = new ArrayList<>();
+        ops.add(ContentProviderOperation
+                .newInsert(ContactsContract.RawContacts.CONTENT_URI)
+                .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+                .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
+                .build()
+        );
         ops.add(ContentProviderOperation
                 .newInsert(ContactsContract.Data.CONTENT_URI)
                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-                .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, newPhoneContact.getName())
+                .withValue(ContactsContract.Contacts.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, contact.getName())
                 .build()
         );
         ops.add(ContentProviderOperation
                 .newInsert(ContactsContract.Data.CONTENT_URI)
                 .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
                 .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, newPhoneContact.getNumber())
-                .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MAIN)
+                .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getNumber())
+                .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
                 .build()
         );
 
-        ContentProviderResult[] results = resolver.applyBatch(ContactsContract.AUTHORITY, ops);
-
-        Uri uri = results[0].uri;
-        // if contacts uri returned, there was an error with adding the number
-        if (uri.getPath().contains("people")) {
-            throw new Exception(String.valueOf(R.string.error_phone_number_not_stored));
-        }
-        // if phone uri returned, everything went OK
-        if (!uri.getPath().contains("phones")) {
-            // some unknown error has happened
+        ContentProviderResult[] results;
+        try {
+            results = resolver.applyBatch(ContactsContract.AUTHORITY, ops);
+        } catch (Exception e) {
             throw new Exception(String.valueOf(R.string.error_phone_number_error));
         }
-        newPhoneContact.setId(uri.getLastPathSegment());
-        return true;
+
+        if (results.length > 2) {
+            Uri uri = results[2].uri;
+            // if contacts uri returned, there was an error with adding the number
+            if (uri.getPath().contains("people")) {
+                throw new Exception(String.valueOf(R.string.error_phone_number_not_stored));
+            }
+            contact.setId(uri.getLastPathSegment());
+        }
     }
 
     public Uri retrieveContactUri(Contact contact) {

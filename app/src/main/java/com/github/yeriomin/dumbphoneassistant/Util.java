@@ -26,8 +26,7 @@ public abstract class Util {
      * Creates a contact
      * 
      * @param newContact The Contact object containing the name and number of the contact
-     * @return Success or not
      */
-    public abstract boolean create(Contact newContact) throws Exception;
+    public abstract void create(Contact newContact) throws Exception;
 
 }
