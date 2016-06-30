@@ -1,8 +1,10 @@
 package com.github.yeriomin.dumbphoneassistant;
 
+import android.telephony.PhoneNumberUtils;
+
 public class Contact {
 
-    private String id = null;
+    private String id;
     private String name;
     private String number;
     private String label;
@@ -42,33 +44,11 @@ public class Contact {
         this.label = label;
     }
 
-    /**
-     * Null-safe string compare
-     */
-    private boolean compareStrings(final String one, final String two) {
-        if (one == null ^ two == null) {
-            return false;
-        }
-        if (one == null && two == null) {
-            return true;
-        }
-        return one.compareTo(two) == 0;
-    }
-
     @Override
     public boolean equals(Object o) {
-        // if not Contact, can't be true
         if(!(o instanceof Contact)) {
             return false;
         }
-        Contact c = (Contact)o;
-        
-        // only if id's present, compare them
-        if((id != null) && (id.length()) > 0 && (c.id.length() > 0)) {
-            return c.id.compareTo(id) == 0;
-        }
-        
-        // finally if numbers not equal...
-        return compareStrings(number, c.number);
+        return PhoneNumberUtils.compare(number, ((Contact) o).number);
     }
 }

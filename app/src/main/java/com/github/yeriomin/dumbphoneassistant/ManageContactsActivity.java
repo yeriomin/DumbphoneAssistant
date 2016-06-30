@@ -16,7 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,13 +29,14 @@ import java.util.List;
 
 public class ManageContactsActivity extends TabActivity {
 
-    private ListView phoneView;
-    private ListView simView;
+    private PhoneRowAdapter phoneAdapter;
+    private SimRowAdapter simAdapter;
     private List<Contact> phoneContacts;
     private List<Contact> simContacts;
     
     private SimUtil simUtil;
     private PhoneUtil phoneUtil;
+
     private ProgressDialog progressDialog;
     private PermissionManager permissionManager;
 
@@ -73,24 +77,11 @@ public class ManageContactsActivity extends TabActivity {
         // if this was called after editing a phone contact, refresh the view
         if (requestCode == EDIT_REQUEST_CODE) {
             phoneContacts = phoneUtil.get();
-            refreshPhoneListView();
+            phoneAdapter.notifyDataSetChanged();
+            simAdapter.notifyDataSetChanged();
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
-    }
-    
-    /**
-     * refreshes the sim contacts ListViews using the current values stored in simContacts
-     */
-    private void refreshSimListView() {
-        simView.setAdapter(new SimRowAdapter(simContacts));
-    }
-
-    /**
-     * refreshes the phone contacts ListView using the current values stored in phoneContacts
-     */
-    private void refreshPhoneListView() {
-        phoneView.setAdapter(new PhoneRowAdapter(phoneContacts));
     }
 
     /**
@@ -115,7 +106,7 @@ public class ManageContactsActivity extends TabActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 
-        phoneView = (ListView) findViewById(R.id.phoneview);
+        ListView phoneView = (ListView) findViewById(R.id.phoneview);
         View headerPhoneView = lf.inflate(R.layout.list_item_phone, phoneView, false);
         headerPhoneView.findViewById(R.id.button_edit).setVisibility(View.INVISIBLE);
         TextView titlePhone = (TextView) headerPhoneView.findViewById(R.id.text_contact_name);
@@ -138,7 +129,7 @@ public class ManageContactsActivity extends TabActivity {
         });
         phoneView.addHeaderView(headerPhoneView);
 
-        simView = (ListView) findViewById(R.id.simview);
+        ListView simView = (ListView) findViewById(R.id.simview);
         View headerSimView = lf.inflate(R.layout.list_item_sim, simView, false);
         TextView titleSim = (TextView) headerSimView.findViewById(R.id.text_contact_name);
         titleSim.setText(getString(R.string.title_move_all_contacts_to_phone));
@@ -187,9 +178,11 @@ public class ManageContactsActivity extends TabActivity {
         simView.addHeaderView(headerSimView);
 
         phoneContacts = phoneUtil.get();
-        refreshPhoneListView();
+        phoneAdapter = new PhoneRowAdapter(phoneContacts);
+        phoneView.setAdapter(phoneAdapter);
         simContacts = simUtil.get();
-        refreshSimListView();
+        simAdapter = new SimRowAdapter(simContacts);
+        simView.setAdapter(simAdapter);
     }
 
     private void startContactEditActivity(Contact contact) {
@@ -285,7 +278,7 @@ public class ManageContactsActivity extends TabActivity {
                 convertView = inflater.inflate(this.listItemId, parent, false);
             }
             convertView.setClickable(false);
-            
+
             Contact contact = (Contact)this.getItem(position);
 
             ((TextView)convertView.findViewById(R.id.text_contact_name)).setText(contact.getName());
@@ -320,23 +313,32 @@ public class ManageContactsActivity extends TabActivity {
             buttonEdit.setOnClickListener(lEdit);
             buttonEdit.setTag(contact);
 
+            ImageView imageTick = (ImageView) view.findViewById(R.id.tick_to_sim);
             ImageButton buttonToSim = (ImageButton) view.findViewById(R.id.button_to_sim);
-            View.OnClickListener lToSim = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String message;
-                    try {
-                        copyToSim((Contact) v.getTag());
-                        message = getString(R.string.confirm_sim_contact_stored);
-                        refreshSimListView();
-                    } catch (Exception e) {
-                        message = e.getMessage();
+            if (simContacts.contains(contact)) {
+                buttonToSim.setVisibility(View.GONE);
+                imageTick.setVisibility(View.VISIBLE);
+            } else {
+                View.OnClickListener lToSim = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String message;
+                        try {
+                            copyToSim((Contact) v.getTag());
+                            message = getString(R.string.confirm_sim_contact_stored);
+                            phoneAdapter.notifyDataSetChanged();
+                            simAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            message = e.getMessage();
+                        }
+                        Toast.makeText(ManageContactsActivity.this, message, Toast.LENGTH_SHORT).show();
                     }
-                    Toast.makeText(ManageContactsActivity.this, message, Toast.LENGTH_SHORT).show();
-                }
-            };
-            buttonToSim.setOnClickListener(lToSim);
-            buttonToSim.setTag(contact);
+                };
+                buttonToSim.setOnClickListener(lToSim);
+                buttonToSim.setTag(contact);
+                buttonToSim.setVisibility(View.VISIBLE);
+                imageTick.setVisibility(View.GONE);
+            }
 
             return view;
         }
@@ -353,24 +355,43 @@ public class ManageContactsActivity extends TabActivity {
             View view = super.getView(position, convertView, parent);
             Contact contact = (Contact) this.getItem(position);
 
+            RelativeLayout.LayoutParams paramsTick = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+            paramsTick.addRule(RelativeLayout.RIGHT_OF, R.id.tick_to_phone);
+            RelativeLayout.LayoutParams paramsButton = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            paramsButton.addRule(RelativeLayout.RIGHT_OF, R.id.button_to_phone);
+
+            LinearLayout layout = (LinearLayout) view.findViewById(R.id.name_and_number);
+            ImageView imageTick = (ImageView) view.findViewById(R.id.tick_to_phone);
             ImageButton buttonToPhone = (ImageButton) view.findViewById(R.id.button_to_phone);
-            View.OnClickListener lToPhone = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String message;
-                    try {
-                        Contact contact = (Contact) v.getTag();
-                        copyToPhone(contact);
-                        message = getString(R.string.confirm_phone_contact_number_stored, contact.getName());
-                        refreshPhoneListView();
-                    } catch (Exception e) {
-                        message = e.getMessage();
+            if (phoneContacts.contains(contact)) {
+                buttonToPhone.setVisibility(View.GONE);
+                imageTick.setVisibility(View.VISIBLE);
+                layout.setLayoutParams(paramsTick);
+            } else {
+                View.OnClickListener lToPhone = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String message;
+                        try {
+                            Contact contact = (Contact) v.getTag();
+                            copyToPhone(contact);
+                            message = getString(R.string.confirm_phone_contact_number_stored, contact.getName());
+                            phoneAdapter.notifyDataSetChanged();
+                            simAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            message = e.getMessage();
+                        }
+                        Toast.makeText(ManageContactsActivity.this, message, Toast.LENGTH_SHORT).show();
                     }
-                    Toast.makeText(ManageContactsActivity.this, message, Toast.LENGTH_SHORT).show();
-                }
-            };
-            buttonToPhone.setOnClickListener(lToPhone);
-            buttonToPhone.setTag(contact);
+                };
+                buttonToPhone.setOnClickListener(lToPhone);
+                buttonToPhone.setTag(contact);
+                buttonToPhone.setVisibility(View.VISIBLE);
+                imageTick.setVisibility(View.GONE);
+                layout.setLayoutParams(paramsButton);
+            }
 
             ImageButton buttonDelete = (ImageButton) view.findViewById(R.id.button_delete);
             View.OnClickListener lDelete = new View.OnClickListener() {
@@ -407,7 +428,8 @@ public class ManageContactsActivity extends TabActivity {
             boolean success = false;
             try {
                 success = deleteFromSim(contact);
-                refreshSimListView();
+                simAdapter.notifyDataSetChanged();
+                phoneAdapter.notifyDataSetChanged();
             } catch (Exception e) {
                 // TODO: decide what to do with failed deletions
             }
@@ -474,11 +496,8 @@ public class ManageContactsActivity extends TabActivity {
                 @Override
                 public void run() {
                     progressDialog.dismiss();
-                    if (mode == COPY_ALL_TO_PHONE) {
-                        refreshPhoneListView();
-                    } else {
-                        refreshSimListView();
-                    }
+                    phoneAdapter.notifyDataSetChanged();
+                    simAdapter.notifyDataSetChanged();
                     if (failures > 0) {
                         String message = getString(R.string.error_bulk_copy, failures);
                         if (mode == COPY_ALL_TO_SIM) {

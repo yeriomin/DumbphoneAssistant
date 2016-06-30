@@ -3,6 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/ImageButtonDim" >
 
+
+    <ImageView
+        android:id="@+id/tick_to_phone"
+        android:src="@drawable/ic_tick"
+        android:layout_width="@dimen/ImageButtonDim"
+        android:layout_height="@dimen/ImageButtonDim"
+        android:visibility="gone" />
+
     <ImageButton
         android:id="@+id/button_to_phone"
         android:src="@drawable/ic_arrow_left"
@@ -12,6 +20,7 @@
         android:layout_height="@dimen/ImageButtonDim" />
 
     <LinearLayout
+        android:id="@+id/name_and_number"
         android:orientation="vertical"
         android:gravity="center"
         android:layout_width="wrap_content"
