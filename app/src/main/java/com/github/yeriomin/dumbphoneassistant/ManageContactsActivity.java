@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,8 +78,7 @@ public class ManageContactsActivity extends TabActivity {
         // if this was called after editing a phone contact, refresh the view
         if (requestCode == EDIT_REQUEST_CODE) {
             phoneContacts = phoneUtil.get();
-            phoneAdapter.notifyDataSetChanged();
-            simAdapter.notifyDataSetChanged();
+            update();
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -183,6 +183,18 @@ public class ManageContactsActivity extends TabActivity {
         simContacts = simUtil.get();
         simAdapter = new SimRowAdapter(simContacts);
         simView.setAdapter(simAdapter);
+
+        update();
+    }
+
+    private void update() {
+        simAdapter.notifyDataSetChanged();
+        phoneAdapter.notifyDataSetChanged();
+        TabWidget tabWidget = getTabHost().getTabWidget();
+        TextView labelPhone = (TextView) tabWidget.getChildAt(0).findViewById(android.R.id.title);
+        TextView labelSim = (TextView) tabWidget.getChildAt(1).findViewById(android.R.id.title);
+        labelPhone.setText(getString(R.string.phone_tab_title) + " (" + phoneContacts.size() + ")");
+        labelSim.setText(getString(R.string.sim_tab_title) + " (" + simContacts.size() + ")");
     }
 
     private void startContactEditActivity(Contact contact) {
@@ -216,11 +228,10 @@ public class ManageContactsActivity extends TabActivity {
         // create contact on SIM card
         try {
             simUtil.create(newSimContact);
+            simContacts.add(0, newSimContact);
         } catch (Exception e) {
             throw new Exception(getString(R.string.error_sim_contact_not_stored));
         }
-
-        simContacts.add(0, newSimContact);
     }
 
     private void copyToPhone(Contact contact) throws Exception {
@@ -326,8 +337,7 @@ public class ManageContactsActivity extends TabActivity {
                         try {
                             copyToSim((Contact) v.getTag());
                             message = getString(R.string.confirm_sim_contact_stored);
-                            phoneAdapter.notifyDataSetChanged();
-                            simAdapter.notifyDataSetChanged();
+                            update();
                         } catch (Exception e) {
                             message = e.getMessage();
                         }
@@ -378,8 +388,7 @@ public class ManageContactsActivity extends TabActivity {
                             Contact contact = (Contact) v.getTag();
                             copyToPhone(contact);
                             message = getString(R.string.confirm_phone_contact_number_stored, contact.getName());
-                            phoneAdapter.notifyDataSetChanged();
-                            simAdapter.notifyDataSetChanged();
+                            update();
                         } catch (Exception e) {
                             message = e.getMessage();
                         }
@@ -428,8 +437,7 @@ public class ManageContactsActivity extends TabActivity {
             boolean success = false;
             try {
                 success = deleteFromSim(contact);
-                simAdapter.notifyDataSetChanged();
-                phoneAdapter.notifyDataSetChanged();
+                update();
             } catch (Exception e) {
                 // TODO: decide what to do with failed deletions
             }
@@ -496,8 +504,7 @@ public class ManageContactsActivity extends TabActivity {
                 @Override
                 public void run() {
                     progressDialog.dismiss();
-                    phoneAdapter.notifyDataSetChanged();
-                    simAdapter.notifyDataSetChanged();
+                    update();
                     if (failures > 0) {
                         String message = getString(R.string.error_bulk_copy, failures);
                         if (mode == COPY_ALL_TO_SIM) {
