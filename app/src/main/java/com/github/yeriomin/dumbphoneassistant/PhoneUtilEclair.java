@@ -15,6 +15,14 @@ import java.util.ArrayList;
 @TargetApi(5)
 public class PhoneUtilEclair extends PhoneUtil {
 
+    private static final String[] simTypes = new String[] {
+            "com.android.contacts.sim",
+            "com.anddroid.contacts.sim", // HTC
+            "com.sonyericsson.adncontacts", // Sony
+            "vnd.sec.contact.sim",
+            "USIM Account",
+    };
+
     public PhoneUtilEclair(Activity activity) {
         super(activity);
     }
@@ -28,7 +36,13 @@ public class PhoneUtilEclair extends PhoneUtil {
                 ContactsContract.CommonDataKinds.Phone.LABEL,
                 ContactsContract.CommonDataKinds.Phone.NUMBER
         };
-        String selection = null;
+        String selection = "";
+        for (String type: PhoneUtilEclair.simTypes) {
+            selection = selection + ContactsContract.RawContacts.ACCOUNT_TYPE + " <> '" + type + "'";
+            if (!type.equals(PhoneUtilEclair.simTypes[PhoneUtilEclair.simTypes.length - 1])) {
+                selection = selection + " AND ";
+            }
+        }
         String[] selectionArgs = null;
         String sortOrder = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE LOCALIZED ASC";
 
