@@ -18,13 +18,11 @@
             <ListView 
                 android:id="@+id/phoneview"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent" 
-                android:fastScrollEnabled="true" />
+                android:layout_height="fill_parent" />
             <ListView
                 android:id="@+id/simview"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent" 
-                android:fastScrollEnabled="true" />
+                android:layout_height="fill_parent" />
     	</FrameLayout>
     </LinearLayout>
 </TabHost>
