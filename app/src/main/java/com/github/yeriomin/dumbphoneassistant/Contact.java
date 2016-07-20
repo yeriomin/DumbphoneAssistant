@@ -2,7 +2,7 @@ package com.github.yeriomin.dumbphoneassistant;
 
 import android.telephony.PhoneNumberUtils;
 
-public class Contact {
+public class Contact implements Comparable<Contact> {
 
     private String id;
     private String name;
@@ -50,5 +50,10 @@ public class Contact {
             return false;
         }
         return PhoneNumberUtils.compare(number, ((Contact) o).number);
+    }
+
+    @Override
+    public int compareTo(Contact other) {
+        return this.name.compareTo(other.name);
     }
 }

@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ManageContactsActivity extends TabActivity {
@@ -188,6 +189,8 @@ public class ManageContactsActivity extends TabActivity {
     }
 
     private void update() {
+        Collections.sort(simContacts);
+        Collections.sort(phoneContacts);
         simAdapter.notifyDataSetChanged();
         phoneAdapter.notifyDataSetChanged();
         TabWidget tabWidget = getTabHost().getTabWidget();
@@ -228,7 +231,7 @@ public class ManageContactsActivity extends TabActivity {
         // create contact on SIM card
         try {
             simUtil.create(newSimContact);
-            simContacts.add(0, newSimContact);
+            simContacts.add(newSimContact);
         } catch (Exception e) {
             throw new Exception(getString(R.string.error_sim_contact_not_stored));
         }
@@ -246,7 +249,7 @@ public class ManageContactsActivity extends TabActivity {
         // create contact on phone
         try {
             phoneUtil.create(contact);
-            phoneContacts.add(0, contact);
+            phoneContacts.add(contact);
         } catch (Exception e) {
             // This is an exception from some util class, so it is a string id
             throw new Exception(getString(Integer.parseInt(e.getMessage())));
