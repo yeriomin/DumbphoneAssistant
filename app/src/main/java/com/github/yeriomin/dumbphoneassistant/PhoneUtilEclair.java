@@ -9,8 +9,11 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.PhoneLookup;
+import android.text.TextUtils;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @TargetApi(5)
 public class PhoneUtilEclair extends PhoneUtil {
@@ -36,22 +39,18 @@ public class PhoneUtilEclair extends PhoneUtil {
                 ContactsContract.CommonDataKinds.Phone.LABEL,
                 ContactsContract.CommonDataKinds.Phone.NUMBER
         };
-        String selection = "";
-        for (String type: PhoneUtilEclair.simTypes) {
-            selection = selection + ContactsContract.RawContacts.ACCOUNT_TYPE + " <> '" + type + "'";
-            if (!type.equals(PhoneUtilEclair.simTypes[PhoneUtilEclair.simTypes.length - 1])) {
-                selection = selection + " AND ";
-            }
-        }
-        String[] selectionArgs = null;
-        String sortOrder = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE LOCALIZED ASC";
+        String[] simTypesQueryParts = new String[simTypes.length];
+        Arrays.fill(simTypesQueryParts, ContactsContract.RawContacts.ACCOUNT_TYPE + " <> ?");
+        String simTypesQuery = TextUtils.join(" AND ", simTypesQueryParts);
+        String selection = ContactsContract.RawContacts.ACCOUNT_TYPE + " IS NULL OR (" + simTypesQuery + ")";
+        String[] selectionArgs = simTypes;
 
         Cursor results = resolver.query(
                 uri,
                 projection,
                 selection,
                 selectionArgs,
-                sortOrder
+                null
         );
 
         // create array of Phone contacts and fill it
