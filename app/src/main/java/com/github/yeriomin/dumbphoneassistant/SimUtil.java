@@ -194,7 +194,7 @@ public class SimUtil extends Util {
             String firstLetter = label.substring(0, 1);
             name = name + "," + firstLetter;
         }
-        String number = contact.getNumber().replace("-", "");
+        String number = contact.getNumberWithoutSeparators();
         return new Contact(null, name, number);
     }
 }

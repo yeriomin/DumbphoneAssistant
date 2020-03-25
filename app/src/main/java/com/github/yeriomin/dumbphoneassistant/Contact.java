@@ -21,6 +21,10 @@ public class Contact implements Comparable<Contact> {
         return number;
     }
 
+    public String getNumberWithoutSeparators() {
+        return PhoneNumberUtils.stripSeparators(number);
+    }
+
     public String getLabel() {
         return label;
     }
